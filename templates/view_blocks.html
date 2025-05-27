@@ -1,0 +1,12 @@
+<h2>Production Blocks</h2>
+<ul>
+    {% for block in chain %}
+    <li>
+        Block {{ block.index }}<br>
+        Time: {{ block.timestamp }}<br>
+        Data: {{ block.data }}<br>
+        Hash: {{ block.hash }}<br>
+        Prev: {{ block.previous_hash }}
+    </li><hr>
+    {% endfor %}
+</ul>
