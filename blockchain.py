@@ -35,12 +35,26 @@ class Blockchain:
     def __init__(self):
         self.chain = self.load_chain()
 
+        # ✅ Ensure genesis block is added if chain is empty
+        if not self.chain:
+            self.chain.append(self.create_genesis_block())
+            self.save_chain()
+
     def create_genesis_block(self):
         return Block(0, "Genesis Block", "0")
 
     def add_block(self, data):
+        # ✅ Ensure genesis block exists before adding
+        if not self.chain:
+            self.chain.append(self.create_genesis_block())
+
         last_block = self.chain[-1]
-        new_block = Block(len(self.chain), data, last_block.hash)
+        new_block = Block(
+            index=last_block.index + 1,
+            timestamp=time.ctime(),
+            data=data,
+            previous_hash=last_block.hash
+        )
         self.chain.append(new_block)
         self.save_chain()
 
@@ -54,7 +68,7 @@ class Blockchain:
                 data = json.load(f)
                 return [Block.from_dict(b) for b in data]
         else:
-            return [self.create_genesis_block()]
+            return []
 
     def get_chain(self):
         return self.chain
